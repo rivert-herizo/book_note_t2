@@ -1,0 +1,156 @@
+<%- include('partials/header.ejs') -%>
+
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-2 d-none d-md-block">
+            </div>
+
+            <div class="col">
+                <% if(locals.book) { %>
+                <div class="mt-4 p-5 bg-primary text-white rounded mb-3">
+                    <h1><%= book.title %></h1>
+                    <p><%= book.description %></p>
+                    <p>Date read : <%= book.date %>,  ISBN: <%= book.isbn %>, Rating : <%= book.rate %>/10. </p>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editBookModal">
+                        Edit book
+                    </button>
+
+                    <!-- Edit Book Modal -->
+                    <div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBookModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="editBookModalLabel">Edit this book</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="/book_edit/<%= book.id %>" method="POST">
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="bookTitle" class="form-label">Book title</label>
+                                        <input type="text" class="form-control" id="bookTitle" placeholder="What is the book title ?" value='<%= book.title%>' name="bookTitle">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="bookAuthor" class="form-label">Book Author</label>
+                                        <input type="text" class="form-control" id="bookAuthor" placeholder="What is the book Author ?" value='<%= book.author %>' name="bookAuthor">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="bookISBN" class="form-label">Book ISBN</label>
+                                        <input type="text" class="form-control" id="bookISBN" placeholder="What is the book ISBN ?" value='<%= book.isbn %>' name="bookISBN">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="bookRate" class="form-label">Book Rate</label>
+                                        <input type="text" class="form-control" id="bookRate" placeholder="how do you rate this book out of 10 ?" value='<%= book.rate %>' name="bookRate">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">A brief description of the book</label>
+                                        <textarea class="form-control" id="description" rows="3" name="bookDescription"><%= book.description%></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+      
+                </div>
+                 <!-- Add note Modal -->
+                    <div class="modal fade" id="addNoteModal" tabindex="-1" aria-labelledby="addNoteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="addNoteModalLabel">Add a book</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="/addNote/<%= book.id %>" method="POST">
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="bookTitle" class="form-label">Note title</label>
+                                        <input type="text" class="form-control" id="noteTitle" placeholder="What is the note title ?" name="noteTitle">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="note" class="form-label">The note </label>
+                                        <textarea class="form-control" id="note" rows="3" name="bookNote"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                
+                <% } %>
+                <p class="fs-4 mb-3">My notes</p>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNoteModal">
+                    Add note
+                </button>
+
+                <% if(locals.notes) { %>
+                    <% notes.forEach(function(note) { %>
+                        <% if(note) { %>
+                            <div class="card mt-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= note.note_title %></h5>
+                                    <h6 class="card-subtitle mb-2 text-body-secondary"><%= note.date %></h6>
+                                    <p class="card-text"><%= note.note %></p>
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editNoteModal">
+                                        Edit note
+                                    </button>
+                                    <form action="/note_delete/<%= note.id %>?_method=DELETE" method="POST" style="display:inline;">
+                                        <input type="hidden" value="<%= note.book_id %>" name="book_id">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- Edit note Modal -->
+                            <div class="modal fade" id="editNoteModal" tabindex="-1" aria-labelledby="editNoteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="editNoteModalLabel">Add a book</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form action="/editNote/<%= note.id %>" method="POST">
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="bookTitle" class="form-label">Note title</label>
+                                                <input type="text" class="form-control" id="noteTitle" placeholder="What is the note title ?" name="noteTitle" value="<%= note.note_title %>">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="note" class="form-label">The note </label>
+                                                <textarea class="form-control" id="note" rows="3" name="bookNote"><%= note.note %></textarea>
+                                            </div>
+                                            <input type="hidden" value="<%= note.book_id %>" name="book_id">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Edit</button>
+                                        </div>
+                                    </form>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <h1> No note yet for this book baby. </h1>
+                        <% } %> 
+                    <% }); %>
+                <% }; %>
+
+            </div>
+
+            <div class="col-2 d-none d-md-block">
+            </div>
+        </div>
+    </div>
+
+     
+
+<%- include('partials/footer.ejs') -%>

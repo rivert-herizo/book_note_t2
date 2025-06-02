@@ -1,0 +1,66 @@
+<%- include('partials/header.ejs') %>
+        
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-2 d-none d-md-block">
+                </div>
+
+                <div class="col">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link disabled" href="#">Sort by</a></li>
+                            
+                                <li class="page-item">
+                                    <form action="/sort" method="post">
+                                        <input name="typev"  value="rate" placeholder="Best" type="hidden">
+                                        <button type="submit" class="page-link" >Best</button>
+                                    </form>
+                                </li>
+                                <li class="page-item">
+                                    <form action="/sort" method="post">
+                                        <input type="hidden" name="typev" class="page-link" value="date" placeholder="Date">
+                                        <button type="submit" class="page-link" >Date</button>
+                                    </form>    
+                                </li>
+                                <li class="page-item">
+                                    <form action="/sort" method="post">
+                                        <input type="hidden" name="typev" class="page-link" value="title" placeholder="Title">
+                                        <button type="submit" class="page-link" >Title</button>
+                                    </form>
+                                </li>
+                        </ul>
+                    </nav>
+                    <% if (locals.books ) { %>
+                        <% books.forEach(function(book) { %>
+                            <div class="card mb-3">
+                                <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-L.jpg" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="/book/<%= book.id %>"><%= book.title %></a>
+                                    </h5>
+                                    <p class="fs-6 secondary"><%= book.date %>, I would recommend it <%= book.rate %> out of 10 </p>
+                                    <p class="card-text"><%= book.description %></p>
+                                    <a href="/book/<%= book.id %>" class="btn btn-primary">Read notes</a>
+                                    <form action="/book_delete/<%= book.id %>?_method=DELETE" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <%  }  else { %>
+                        <div class="mt-4 p-5 bg-danger text-white rounded mb-3">
+                            <h1>You haven't read any book yet baby</h1>
+                        </div>
+                    <% } %>
+                </div>
+
+                <div class="col-2 d-none d-md-block">
+                </div>
+            </div>
+        </div>
+
+        
+
+
+
+<%- include('partials/footer.ejs') %>
